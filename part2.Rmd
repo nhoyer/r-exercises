@@ -1,0 +1,49 @@
+---
+title: 'Descriptive Analytics-Part 2 : Data Imputation'
+author: "Nils Hoyer"
+date: "11/19/2016"
+output: html_document
+---
+Descriptive Analytics is the examination of data or content, usually manually performed, to answer the question “What happened?”.
+
+In order to be able to solve this set of exercises you should have solved the part 0 and’part 1 of this series, in case you haven’t you can find the solutions to run them in your machine part 0 and part 1. This is the third set of exercise of a series of exercises that aims to provide a descriptive analytics solution to the ‘2008’ data set from here. This data set which contains the arrival and departure information for all domestic flights in the US from 2008 has become the “iris” data set for Big Data. In the exercises below we will try to impute the missing values in order to be able to analyse the data later on. Before proceeding, it might be helpful to look over the help pages for the mean, median, transform, impute, lm, predict.
+
+For this set of exercises you will need to install and load the package Hmisc.
+
+install.packages('Hmisc')
+library(Hmisc)
+
+Answers to the exercises are available here.
+
+If you obtained a different (correct) answer than those listed on the solutions page, please feel free to post your answer as a comment on that page.
+
+Exercise 1
+Print the summary statistics in order to have an actual idea of the missing values.
+
+Exercise 2
+Impute the missing values of flights$ArrTime with the mean using which.
+
+Exercise 3
+Impute the missing values of flights$CRSArrTime with the median using which.
+
+Exercise 4
+Impute the missing values of flights$AirTime with the median using the transform operator.
+
+Exercise 5
+Impute the missing values of flights$DepTime with the median using the transform operator. Note: mind the data formatting .
+
+Exercise 6
+Impute the missing values of flights$ArrDelay with the median using the impute operator.
+
+Exercise 7
+Impute the missing values of flights$CRSElapsedTime with the median using the impute operator.
+
+Exercise 8
+Make a linear regression model named lm_dep_time_delay with target variable flights$DepDelay and independent variables : flights$ArrTime, flights$AirTime, flights$ArrDelay, flights$DepTime.
+
+Exercise 9
+Create an object pred_dep_time_delay and assign the predicted values.
+
+Exercise 10
+Impute the missing values based using the pred_dep_time_delay and ifelse function.
+Print the summary statistics to see the changes that you made.

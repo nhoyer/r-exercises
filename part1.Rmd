@@ -1,0 +1,151 @@
+---
+title: 'Descriptive Analytics-Part 1: Data Formatting Exercises'
+author: "Nils Hoyer"
+date: "11/19/2016"
+output: html_document
+---
+
+
+Descriptive Analytics is the examination of data or content, usually manually performed, to answer the question “What happened?”.
+
+In order to be able to solve this set of exercises you should have solved the ‘part 0’ of this series, in case you haven’t you can find the solutions to run them in your machine here. This is the second set of exercise of a series of exercises that aims to provide a descriptive analytics solution to the ‘2008’ data set from here. This data set which contains the arrival and departure information for all domestic flights in the US from 2008 has become the “iris” data set for Big Data. In the exercises below we will try to make the format of the dates adequate for further processing. Before proceeding, it might be helpful to look over the help pages for the str_pad, substring, paste, chron, head.
+
+For this set of exercises you will need to install and load the packages stringr, chron.
+
+install.packages('stringr')
+install.packages('chron')
+library(stringr)
+library(chron)
+
+```{r}
+library(stringr)
+library(chron)
+```
+
+
+Answers to the exercises are available here.
+
+If you obtained a different (correct) answer than those listed on the solutions page, please feel free to post your answer as a comment on that page.
+
+##Exercise 1
+Print the first five rows of the dataset. What do you think about the date formatting?
+```{r}
+head(flights)
+```
+
+
+##Exercise 2
+Create a new objected named dep_time and assign the values of flights$DepTime . If the value is less than 4 elements, fill make it a 4-element value with zeros. For example, 123 -> 0123.
+```{r}
+dep_time <- str_pad(flights$DepTime, 4, pad = "0")
+```
+
+
+##Exercise 3
+Create a new object named hour and assign the first two elements of the dep_time object. Can you figure out why I am asking that?
+
+```{r}
+hour <- substring(dep_time,1,2)
+```
+
+
+##Exercise 4
+Create a new object named minutes and assign the last two elements of the dep_time object.
+```{r}
+minutes <- substring(dep_time,3,4)
+
+```
+
+
+
+##Exercise 5
+Assign to the object dep_time the hour in format ‘HH:MM:SS’ , seconds should be ‘00’ , we make this assumption for the sake of formatting.
+```{r}
+
+for(i in 1:length(dep_time)){
+  dep_time[i] <- paste(c(hour[i],minutes[i],'00'),collapse = ':')
+}
+```
+
+
+
+##Exercise 6
+Change the class of dep_time from character to times.
+```{r}
+dep_time <- chron(times=dep_time)
+```
+
+
+##Exercise 7
+Print the first 10 rows and then the 10 last rows of the dep_time. If the formatting of the object is ‘HH:MM:SS’(as it should) then assign the dep_time to flights$DepTime .
+
+```{r}
+head(dep_time, n=10)
+tail(dep_time, n=10)
+flights$DepTime <- dep_time
+```
+
+
+##Exercise 8
+Do the exact same process for the flights$DepTime and create the variable arr_time
+```{r}
+arr_time <- str_pad(flights$ArrTime, 4, pad = "0")
+hour <- substring(arr_time,1,2)
+minutes <- substring(arr_time,3,4)
+
+for(i in 1:length(arr_time)){
+  arr_time[i] <- paste(c(hour[i],minutes[i],'00'),collapse = ':')
+}
+arr_time <- chron(times=arr_time)
+
+head(arr_time, n=10)
+tail(arr_time, n=10)
+
+flights$ArrTime <- arr_time
+
+
+```
+
+
+
+
+##Exercise 9
+Do the exact same process for the flights$ CRSDepTime and create the variable crs_dep_time
+
+```{r}
+crs_time <- str_pad(flights$CRSDepTime, 4, pad = "0")
+hour <- substring(crs_time,1,2)
+minutes <- substring(crs_time,3,4)
+
+for(i in 1:length(crs_time)){
+  crs_time[i] <- paste(c(hour[i],minutes[i],'00'),collapse = ':')
+}
+crs_time <- chron(times=crs_time)
+
+head(crs_time, n=10)
+tail(crs_time, n=10)
+
+flights$CRSDepTime <- crs_time
+```
+
+
+
+##Exercise 10
+Do the exact same process for the flights$CRSArrTime and create the variable crs_arr_time.
+
+```{r}
+crs_arr_time <- str_pad(flights$CRSArrTime, 4, pad = "0")
+hour <- substring(crs_arr_time,1,2)
+minutes <- substring(crs_arr_time,3,4)
+
+for(i in 1:length(crs_arr_time)){
+  crs_arr_time[i] <- paste(c(hour[i],minutes[i],'00'),collapse = ':')
+}
+crs_arr_time <- chron(times=crs_arr_time)
+
+head(crs_arr_time, n=10)
+tail(crs_arr_time, n=10)
+
+flights$CRSArrTime <- crs_arr_time
+```
+
