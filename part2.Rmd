@@ -17,33 +17,81 @@ Answers to the exercises are available here.
 
 If you obtained a different (correct) answer than those listed on the solutions page, please feel free to post your answer as a comment on that page.
 
-Exercise 1
+##Exercise 1
 Print the summary statistics in order to have an actual idea of the missing values.
+```{r}
+summary(flights)
 
-Exercise 2
+```
+
+
+##Exercise 2
 Impute the missing values of flights$ArrTime with the mean using which.
+```{r}
+flights$ArrTime[which(is.na(flights$ArrTime))] <- mean(flights$ArrTime)
+```
 
-Exercise 3
+
+##Exercise 3
 Impute the missing values of flights$CRSArrTime with the median using which.
+```{r}
+flights$CRSArrTime[which(is.na(flights$CRSArrTime))] <- median(flights$CRSArrTime)
+```
 
-Exercise 4
+##Exercise 4
 Impute the missing values of flights$AirTime with the median using the transform operator.
+```{r}
+flights <- transform(flights, AirTime = ifelse(is.na(AirTime), median(AirTime, na.rm=TRUE), AirTime))
 
-Exercise 5
+```
+
+
+##Exercise 5
 Impute the missing values of flights$DepTime with the median using the transform operator. Note: mind the data formatting .
+```{r}
+flights <- transform(flights, DepTime = chron(times=ifelse(is.na(DepTime), median(DepTime, na.rm=TRUE), DepTime)))
 
-Exercise 6
+```
+
+##Exercise 6
 Impute the missing values of flights$ArrDelay with the median using the impute operator.
+```{r}
+flights$ArrDelay <- impute(flights$ArrDelay ,median)
 
-Exercise 7
+```
+
+
+
+##Exercise 7
 Impute the missing values of flights$CRSElapsedTime with the median using the impute operator.
+```{r}
+flights$CRSElapsedTime <- impute(flights$CRSElapsedTime, median)
+```
 
-Exercise 8
+
+
+##Exercise 8
 Make a linear regression model named lm_dep_time_delay with target variable flights$DepDelay and independent variables : flights$ArrTime, flights$AirTime, flights$ArrDelay, flights$DepTime.
+```{r}
+lm_dep_time_delay <- lm (DepDelay ~ ArrTime+AirTime+ArrDelay +DepTime,data=flights)
+summary(lm_dep_time_delay)
+```
 
-Exercise 9
+
+
+##Exercise 9
 Create an object pred_dep_time_delay and assign the predicted values.
+```{r}
+pred_dep_time_delay <- predict(lm_dep_time_delay, flights)
+```
 
-Exercise 10
+
+##Exercise 10
 Impute the missing values based using the pred_dep_time_delay and ifelse function.
 Print the summary statistics to see the changes that you made.
+```{r}
+flights$DepDelay <- ifelse (is.na(flights$DepDelay), pred_dep_time_delay, flights$DepDelay)
+
+summary(flights)
+```
+
