@@ -1,0 +1,96 @@
+---
+title: "Frequency and chi-square test for independence Exercises"
+author: "Nils Hoyer"
+date: "12/1/2016"
+output: html_document
+---
+In this exercise, we cover some basics on frequency tables. We also briefly look at chi-square test for independence to find relationships of two variables. Before proceeding, it might be helpful to look over the help pages for the table, summary, and margin.table functions.
+
+Answers to the exercises are available here.
+
+If you obtained a different (correct) answer than those listed on the solutions page, please feel free to post your answer as a comment on that page.
+
+#Exercise 1
+use the attach() command to load the trees dataset in R
+```{r}
+attach(trees)
+```
+
+
+#Exercise 2
+Use the table() command with the arguments: trees$Height and trees$Volume. This will generate a two-way frequency table. Store this in variable mytable.
+```{r}
+mytable <- table(trees$Height, trees$Volume)
+```
+
+
+
+#Exercise 3
+If you are familiar with excel pivot tables, then you will know this function. Use the margin.table( ) function to get the Height frequencies summed over Volume
+```{r}
+margin.table(mytable, 1)
+```
+
+
+
+#Exercise 4
+Use the margin.table( ) function to get the Volume frequencies summed over Height.
+```{r}
+margin.table(mytable, 2)
+```
+
+
+#Exercise 5
+Now use the table() function again but using all the features of the trees dataset, that includes girth, height and volume. This will print out a multidimensional 3 way frequency table.
+```{r}
+mytable2 <- table(trees$Height, trees$Volume, trees$Girth)
+mytable2
+```
+
+
+#Exercise 6
+Suppose you have a variable ‘a’ that stores a second sample of heights of trees.
+
+
+```{r}
+a=c(70, 65, 63, 72, 80, 83, 66, 75, 80, 75, 79, 76, 76, 69, 75, 74, 85, 8, 71, 63, 78, 80, 74, 72, 77, 81, 82, 80, 86, 80, 87)
+```
+
+Use the cbind() to add the a column to your trees dataset. Store the results back into trees.
+
+```{r}
+trees <- cbind(trees,a)
+```
+
+
+
+#Exercise 7
+Now create a 2 way frequency table between Height and a as the arguments. Store this table in mytable_2.
+
+
+```{r}
+mytable_2 <- table(trees$Height, trees$a)
+```
+
+
+#Exercise 8
+
+Use the margin.table() function again from Q3 and get Height frequencies summer over a. What differences do you observe from the results of Q3.
+
+```{r}
+margin.table(mytable_2,1)
+```
+
+
+#Exercise 9
+Chi Square test for independance:
+a)Print the results of the summary() function on mytable. Note the Chi Square test for independance results and P value
+b)Print the results of the summary() function on mytable_2. Note the Chi Square test for independance results and P value.
+
+```{r}
+summary(mytable)
+summary(mytable_2)
+```
+
+Exercise 10
+What did the chi square test for independance help you to see?

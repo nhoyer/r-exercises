@@ -1,0 +1,109 @@
+---
+title: 'Descriptive Analytics-Part 3 : Outlier treatment'
+author: "Nils Hoyer"
+date: "12/1/2016"
+output: html_document
+---
+
+Descriptive Analytics is the examination of data or content, usually manually performed, to answer the question “What happened?”.
+
+In order to be able to solve this set of exercises you should have solved the part 0 and’part 1 , and part 2 of this series but also you should run this script which contain some more data cleaning. In case you haven’t, run this script in your machine which contains the lines of code we used to modify our data set. This is the fourth set of exercise of a series of exercises that aims to provide a descriptive analytics solution to the ‘2008’ data set from here. This data set which contains the arrival and departure information for all domestic flights in the US from 2008 has become the “iris” data set for Big Data. Outliers treatment is a vital part of descriptive analytics since outliers can lead to misleading conclusions regarding our data. So it is an important skill to have in your skill set. The following exercise demonstrates some of the basic and fairly simplistic methods of treating outliers. For more sophisticated methods of dealing with outliers check out this . But keep in mind that many people claim that ‘eyes beat maths’ when it comes to outliers. Before proceeding, it might be helpful to look over the help pages for the table, subset,boxplot.stats, %in%, ifelse, rp.outlier, scores.
+
+For this set of exercises you will need to install and load the package rapportools, outliers.
+
+install.packages('rapportools')
+library(rapportools)
+install.packages('outliers')
+library(outliers)
+
+Answers to the exercises are available here.
+
+If you obtained a different (correct) answer than those listed on the solutions page, please feel free to post your answer as a comment on that page.
+
+#Exercise 1
+Print the summary statistics and the structure of the dataset in order to see the type of variables and their extreme values, whether it makes sense or not .
+
+```{r}
+summary(flights)
+str(flights)
+```
+
+
+
+#Exercise 2
+When it comes to categorical variables, outliers are considered to be the values of which frequency is less than 1% , barplot of flights$UniqueCarrier and flights$CancellationCode. What do you think? There are more categorical variables , so I encourage you to try them out as well.
+
+```{r}
+plot(flights$UniqueCarrier)
+plot(flights$CancellationCode)
+```
+
+
+#Exercise 3
+Remove the outliers that you have noticed at the barplots of the previous exercise, consider the function subset.
+
+```{r}
+flights <- subset(flights, !UniqueCarrier == "AQ")
+flights <- subset(flights, !CancellationCode == "D")
+
+```
+
+
+#Exercise 4
+A good way of detecting outliers from numerical variables is boxplot, make one with flights$ActualElapsedTime.
+
+```{r}
+boxplot(flights$ActualElapsedTime)
+```
+
+
+#Exercise 5
+Remove the outliers of flights$ActualElapsedTime using boxplot.stats .
+
+```{r}
+flights <- flights[which(!(flights$ActualElapsedTime %in% boxplot.stats(flights$ActualElapsedTime)$out)),]
+```
+
+
+
+#Exercise 6
+Remove outliers from flights using the subset function ,where TaxiIn is greater than 0 and less than 120.
+
+```{r}
+flights <- subset(flights, TaxiIn < 120 & TaxiIn >  0)
+```
+
+
+
+#Exercise 7
+Remove outliers from flights using the subset function ,where TaxiOut is greater than 0 and less than 50.
+```{r}
+flights <- subset(flights, TaxiOut < 50 & TaxiOut > 0)
+```
+
+
+#Exercise 8
+Assign NA value if the value is an outlier of flights$ArrDelay using the ifelse function.
+
+```{r}
+flights$ArrDelay <- ifelse(flights$ArrDelay == outlier(flights$ArrDelay), NA, flights$ArrDelay)
+```
+
+
+#Exercise 9
+Use the rp.outlier to detect and remove the outliers using the Lund Test from flights$Distance , use the rapportools.
+```{r}
+rp.outlier(flights$Distance)
+flights <- subset(flights, Distance != rp.outlier(flights$Distance))
+```
+
+
+
+
+#Exercise 10
+Find the 2% most extreme values of flights$CRSElapsedTime using the scores with chi-square method.
+```{r}
+outliers <- scores(flights$CRSElapsedTime, type="chisq", prob=0.98)
+table(outliers)
+```
+
