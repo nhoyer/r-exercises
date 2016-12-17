@@ -1,0 +1,148 @@
+---
+title: 'Descriptive Analytics-Part 4 : Data Manipulation'
+author: "Nils Hoyer"
+date: "12/17/2016"
+output: html_document
+---
+Descriptive Analytics is the examination of data or content, usually manually performed, to answer the question “What happened?”.
+
+In order to be able to solve this set of exercises you should have solved the part 0, part 1, part 2 ,and part 3 of this series but also you should run this script which contain some more data cleaning. In case you haven’t, run this script in your machine which contains the lines of code we used to modify our data set. This is the fifth set of exercise of a series of exercises that aims to provide a descriptive analytics solution to the ‘2008’ data set from here. This data set which contains the arrival and departure information for all domestic flights in the US from 2008 has become the “iris” data set for Big Data. Descriptive analytics is all about answering questions, the goal of this set of exercises is to ‘answer’ questions with very few lines of code using the dplyr package. The dplyr is a great package for data manipulation ( if you are familiar with sql , it will be a piece of cake for you). Before proceeding, it might be helpful to look over the help pages for the select, contains, filter,summarise, mutate, group_by, arrange.
+
+For this set of exercises you will need to install and load the package rapportools, outliers.
+
+
+```{r}
+library(dplyr)
+library(chron)
+```
+
+Since we use the dplyr package, we will also make the our data frame a local data frame.
+flights <- tbl_df(flights) 
+The reason we do that is because it has some cool properties that can be useful. First of all, if we type ( accidentally) ‘flights’ as a local data frame it will print only the first 10 rows , while as a data frame it will print as many as your screen can fit, which can be both disturbing or have RAM issues may occur down the road. Another reason is that when we type the name of the data frame , it provides us with some information regarding the number of rows and columns and the type of variable that each column is.
+
+Answers to the exercises are available here.
+
+If you obtained a different (correct) answer than those listed on the solutions page, please feel free to post your answer as a comment on that page.
+
+#Exercise 1
+Print the destination, the delay of arrivals and the air time of each flight.
+Hint: use select function
+
+```{r}
+flights %>% 
+    select(Dest, ArrDelay, AirTime) %>% 
+    head()
+variable.names(flights)
+head(flights)
+```
+
+
+#Exercise 2
+Print the columns that their name contains the word ‘Delay’.
+```{r}
+flights %>% 
+    select(contains("Delay")) %>% 
+    head()
+```
+
+
+#Exercise 3
+Print the names of carrier, the month and the day of the week that the delay of carrier is higher than 180.
+```{r}
+flights %>% 
+    filter(CarrierDelay > 180) %>% 
+    select (UniqueCarrier, Month, DayOfWeek, CarrierDelay) %>% 
+    head()
+```
+
+
+#Exercise 4
+Print out all the flights grouped by carrier names.
+```{r}
+flights %>% 
+    group_by(UniqueCarrier)
+```
+
+
+
+#Exercise 5
+Print out the mean of the arrival delay using the summarise function.
+```{r}
+flights %>% 
+    summarise(avg=mean(ArrDelay, na.rm=T))
+```
+
+
+#Exercise 6
+Print out the minimum,mean,median,variance,standard deviation,maximum,and counts of AirTime.
+```{r}
+flights %>% 
+    summarise(Minimum=min(ArrDelay, na.rm=T), Mean=mean(ArrDelay, na.rm=T), Median=median(ArrDelay, na.rm=T), Variance=var(ArrDelay, na.rm=T), StandardDeviation=sd(ArrDelay, na.rm=T), Maximum=max(ArrDelay, na.rm=T))
+```
+
+
+
+#Exercise 7
+Print out the mean delay and the number of flights of each carrier.
+```{r}
+flights %>% 
+    group_by(UniqueCarrier) %>% 
+    summarise(MeanDelay=mean(ArrDelay, na.rm=T), NumberOfFlights=n())
+```
+
+
+#Exercise 8
+Print out the mean delay and the number of flights of each carrier in descending order.
+```{r}
+flights %>% 
+    group_by(UniqueCarrier) %>% 
+    summarise(MeanDelay=mean(ArrDelay, na.rm=T), NumberOfFlights=n()) %>% 
+    arrange(desc(MeanDelay))
+```
+
+
+#Exercise 9
+This exercise is a bit out of context, but it will demonstrate a great way of manipulating data and it is a prerequisite for the next exercise.
+
+
+Create a new column code>Full_Date which will contain the date of each flight and then print it out.
+Hint: Use the mutate function.
+```{r}
+flights$Year <- as.character(flights$Year)
+flights$Month <- as.character(flights$Month)
+flights$DayofMonth <- as.character(flights$DayofMonth)
+
+flights <- flights %>%
+  mutate(Full_Date = chron(date=paste(Month,DayofMonth,Year,sep='/')))
+
+
+flights %>%
+  select(Full_Date)
+```
+
+
+#Exercise 10
+Print out the dates that had the most flights and then print out the dates that had the highest ratio of cancelled flights.
+
+```{r}
+flights %>% 
+    group_by(Full_Date) %>% 
+    summarise(NumberOfFlightsDate=n()) %>% 
+    arrange(desc(NumberOfFlightsDate))
+
+flights %>% 
+    filter(Cancelled==1) 
+
+
+
+%>% 
+    group_by(Full_Date) %>% 
+    summarise(NumberOfCancelled=n())
+    
+flights %>% 
+    group_by(Full_Date) %>% 
+    mutate(RatioCancelled=)
+    summarise()
+        arrange(desc(n()))
+```
+
